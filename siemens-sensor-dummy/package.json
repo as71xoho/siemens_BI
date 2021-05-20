@@ -1,0 +1,14 @@
+{
+  "name": "siemens-sensor-dummy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "run": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mqtt": "^4.2.6"
+  }
+}
