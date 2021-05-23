@@ -56,7 +56,7 @@
 <script>
 // @ is an alias to /src
 import mqtt from 'mqtt';
-
+import store from '../store/store'
 export default {
   name: 'Home',
   components: {
@@ -73,7 +73,7 @@ export default {
       },
       items: [
         {
-          MAX: 0, AVG: 0, MIN: 9999,
+          MAX: 0, AVG: 0, MIN: 9999, "ALARM COUNT": 0 , "NEXT MAINTENANCE": 0
         },
 
       ],
@@ -102,7 +102,9 @@ export default {
       if (rawData.temperature < this.items[0].MIN) {
         this.items[0].MIN = rawData.temperature;
       }
-
+      if(rawData.temperature > store.Options.MaxValue){
+        this.items[0]["ALARM COUNT"]+=1
+      }
       let totalTemperature = 0;
       for (let i = 0; i < this.TempChartOptions.series[0].data.length; i++) {
         totalTemperature += this.TempChartOptions.series[0].data[i][1];
