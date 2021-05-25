@@ -73,7 +73,7 @@ export default {
       },
       items: [
         {
-          MAX: 0, AVG: 0, MIN: 9999, "ALARM COUNT": 0 , "NEXT MAINTENANCE": 0
+          MAX: 0, AVG: 0, MIN: 9999, "ALARM COUNT": 0 , "NEXT MAINTENANCE": new Date(new Date().setFullYear(new Date().getFullYear() + 1))
         },
 
       ],
@@ -102,7 +102,7 @@ export default {
       if (rawData.temperature < this.items[0].MIN) {
         this.items[0].MIN = rawData.temperature;
       }
-      if(rawData.temperature > store.Options.MaxValue){
+      if(rawData.temperature > store.Options.MaxValue || rawData.temperature < store.Options.MinValue){
         this.items[0]["ALARM COUNT"]+=1
       }
       let totalTemperature = 0;
