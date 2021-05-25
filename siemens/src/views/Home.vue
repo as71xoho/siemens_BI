@@ -1,7 +1,29 @@
-<template>
+<template >
 <b-container>
+  <b-row >
+    <b-col >
+      <b-card title="General" class="xcard">
+        <b-row>
+          <b-col md="6">
+            <b-table stacked :items="itemsGeneral"></b-table>
+          </b-col>
+          <b-col md="6">
+  <div class="btn-toolbar">
+              <b-button > Reset Alarms </b-button>
 
-   <b-card title="Temperature Sensor">
+            <b-button>Reset Maintenance </b-button>
+  </div>
+          </b-col>
+
+        </b-row>
+
+      </b-card>
+    </b-col>
+
+  </b-row>
+  <b-row>
+    <b-col>
+   <b-card title="Temperature Sensor" class="xcard">
      <b-row>
    <b-col cols="8">
 
@@ -10,45 +32,38 @@
    </b-col>
    <b-col cols="4">
 
-     <b-table stacked :items="items"></b-table>
+     <b-table stacked :items="itemsTemp"></b-table>
 
    </b-col>
      </b-row>
    </b-card>
+    </b-col>
+  </b-row>
+  <b-row>
+    <b-col>
+  <b-card title="Time  Sensor" class="xcard">
+    <b-row>
+      <b-col cols="8">
 
+        <highcharts :options="TimeStopChartOptions"></highcharts>
+
+      </b-col>
+      <b-col cols="4">
+
+        <b-table stacked :items="itemsTimeStop"></b-table>
+
+      </b-col>
+    </b-row>
+  </b-card>
+    </b-col>
+  </b-row>
   <b-row>
    <b-col>
-     <b-card title="Temperature Sensor">
+     <b-card title="Noise Sensor" class="xcard">
        <highcharts :options="TempChartOptions"></highcharts>
      </b-card>
    </b-col>
   </b-row>
-  <b-row>
-   <b-col>
-     <b-card title="Temperature Sensor">
-       <highcharts :options="TempChartOptions"></highcharts>
-     </b-card>
-   </b-col>
-  </b-row>
-  <b-row>
-   <b-col>
-     <b-card title="Temperature Sensor">
-       <highcharts :options="TempChartOptions"></highcharts>
-     </b-card>
-   </b-col>
-
-   <b-col>
-     <b-card title="Temperature Sensor">
-       <highcharts :options="TempChartOptions"></highcharts>
-     </b-card>
-   </b-col>
-
-   <b-col>
-     <b-card title="Temperature Sensor">
-       <highcharts :options="TempChartOptions"></highcharts>
-     </b-card>
-   </b-col>
- </b-row>
 
 </b-container>
 </template>
@@ -56,7 +71,8 @@
 <script>
 // @ is an alias to /src
 import mqtt from 'mqtt';
-import store from '../store/store'
+import store from '../store/store';
+
 export default {
   name: 'Home',
   components: {
@@ -67,21 +83,53 @@ export default {
         series: [{
           data: [], // sample data
         }],
+        title: '',
         xAxis: {
           type: 'datetime',
         },
       },
-      items: [
+      TimeStopChartOptions: {
+        series: [{
+          data: [], // sample data
+        }],
+        title: '',
+        xAxis: {
+          type: 'datetime',
+        },
+      },
+      itemsTemp: [
         {
-          MAX: 0, AVG: 0, MIN: 9999, "ALARM COUNT": 0 , "NEXT MAINTENANCE": new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+          MAX: 0, AVG: 0, MIN: 9999, 'ALARM COUNT': 0,
+        },
+
+      ],
+      itemsTimeStop: [
+        {
+          MAX: 0, AVG: 0, MIN: 9999, 'ALARM COUNT': 0,
+        },
+
+      ],
+      itemsGeneral: [
+        {
+          Name: 'Siemens ET200', 'Next Maintenance (days)': 365, ID: 69472374,
         },
 
       ],
 
     };
   },
+  methods: {
+    calcStatistics(param) {
+      const data = [];
+      for (let i = 0; i < param.length; i++) {
+        data.push(param[i][1]);
+      }
+      const sum = data.reduce((pv, cv) => pv + cv, 0);
+      const avg = (sum / data.length).toFixed(2);
+      return avg;
+    },
+  },
   created() {
-    console.log('h');
     const client = mqtt.connect('ws://127.0.0.1:9001');
     client.on('connect', () => {
       client.subscribe('#', (err) => {
@@ -90,28 +138,52 @@ export default {
     });
     client.on('message', (topic, message) => {
       // message is Buffer
-      console.log(JSON.parse(message.toString()));
       const rawData = JSON.parse(message.toString());
-      this.TempChartOptions.series[0].data.push([rawData.timestamp, rawData.temperature]);
-      if (this.TempChartOptions.series[0].data.length > 50) {
-        this.TempChartOptions.series[0].data.shift();
+      if (topic === '/temperature') {
+        this.TempChartOptions.series[0].data.push([rawData.timestamp, rawData.temperature]);
+        if (this.TempChartOptions.series[0].data.length > 50) {
+          this.TempChartOptions.series[0].data.shift();
+        }
+        if (rawData.temperature > this.itemsTemp[0].MAX) {
+          this.itemsTemp[0].MAX = rawData.temperature;
+        }
+        if (rawData.temperature < this.itemsTemp[0].MIN) {
+          this.itemsTemp[0].MIN = rawData.temperature;
+        }
+        // eslint-disable-next-line max-len
+        if (rawData.temperature > store.OptionsTemp.MaxValue || rawData.temperature < store.OptionsTemp.MinValue) {
+          this.itemsTemp[0]['ALARM COUNT'] += 1;
+          this.itemsGeneral[0]['Next Maintenance (days)'] -= 5;
+        }
+
+        this.itemsTemp[0].AVG = this.calcStatistics(this.TempChartOptions.series[0].data);
       }
-      if (rawData.temperature > this.items[0].MAX) {
-        this.items[0].MAX = rawData.temperature;
+      if (topic === '/timestop') {
+        this.TimeStopChartOptions.series[0].data.push(
+          [rawData.timestamp, rawData.timePassed],
+        );
+        if (this.TimeStopChartOptions.series[0].data.length > 50) {
+          this.TimeStopChartOptions.series[0].data.shift();
+        }
+        if (rawData.timePassed > this.itemsTimeStop[0].MAX) {
+          this.itemsTimeStop[0].MAX = rawData.timePassed;
+        }
+        if (rawData.timePassed < this.itemsTimeStop[0].MIN) {
+          this.itemsTimeStop[0].MIN = rawData.timePassed;
+        }
+        // eslint-disable-next-line max-len
+        if (rawData.timePassed > store.OptionsTime.MaxValue || rawData.timePassed < store.OptionsTime.MinValue) {
+          this.itemsTimeStop[0]['ALARM COUNT'] += 1;
+          this.itemsGeneral[0]['Next Maintenance (days)'] -= 1;
+        }
+        this.itemsTimeStop[0].AVG = this.calcStatistics(this.TimeStopChartOptions.series[0].data);
       }
-      if (rawData.temperature < this.items[0].MIN) {
-        this.items[0].MIN = rawData.temperature;
-      }
-      if(rawData.temperature > store.Options.MaxValue || rawData.temperature < store.Options.MinValue){
-        this.items[0]["ALARM COUNT"]+=1
-      }
-      let totalTemperature = 0;
-      for (let i = 0; i < this.TempChartOptions.series[0].data.length; i++) {
-        totalTemperature += this.TempChartOptions.series[0].data[i][1];
-      }
-      this.items[0].AVG = (totalTemperature / this.TempChartOptions.series[0].data.length)
-        .toFixed(2);
     });
   },
 };
 </script>
+<style>
+  .xcard{
+    margin-bottom: 2em;
+  }
+</style>
