@@ -21,6 +21,31 @@
     </b-col>
 
   </b-row>
+  <b-row >
+    <b-col >
+      <b-card title="Last events" class="xcard">
+        <b-row>
+          <b-col md="12">
+            <b-table :fields="itemsEventsFields"  :items="itemsEvents">
+              <template #cell(error)="data">
+                <b-button v-b-modal="'my-modal'">{{data.item.error}}</b-button>
+              </template>
+            </b-table>
+          </b-col>
+          <b-modal :id="'my-modal'" :title="'Error Description'" ok-only @hide="resetInfoModal">
+            <pre>Option handling has been configured but
+more than one power module was configured
+for options handling. The slot of the second
+power module that has option handling is
+displayed.</pre>
+          </b-modal>
+
+        </b-row>
+
+      </b-card>
+    </b-col>
+
+  </b-row>
   <b-row>
     <b-col>
    <b-card title="Temperature Sensor" class="xcard">
@@ -112,6 +137,25 @@ export default {
       itemsGeneral: [
         {
           Name: 'Siemens ET200', 'Next Maintenance (days)': 365, ID: 69472374,
+        },
+
+      ],
+      itemsEventsFields: [
+
+        // A regular column
+        'Timestamp',
+        // A regular column
+        'Machine ID',
+        { key: 'error', label: 'Error Code' },
+        'Sensor',
+        'Event',
+      ],
+      itemsEvents: [
+        {
+          Timestamp: new Date('2021.08.10').toUTCString(), 'Machine ID': '#20', error: '4', Sensor: 'ET200', Event: 'Internal Error',
+        },
+        {
+          Timestamp: new Date('2021.04.10').toUTCString(), 'Machine ID': '#12', error: 's563', Sensor: 'Temperature', Event: 'Under Limit',
         },
 
       ],
