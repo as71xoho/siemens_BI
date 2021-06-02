@@ -46,6 +46,22 @@ displayed.</pre>
     </b-col>
 
   </b-row>
+    <b-row >
+    <b-col >
+      <b-card title="Machines" class="xcard">
+        <b-row>
+          <b-col md="12">
+            <b-table :fields="itemsGeneralFields" :items="itemsGeneral"></b-table>
+                          <template #cell(Actions)>
+                <b-button>Select</b-button>
+              </template>
+          </b-col>
+        </b-row>
+
+      </b-card>
+    </b-col>
+
+  </b-row>
   <b-row>
     <b-col>
    <b-card title="Temperature Sensor" class="xcard">
@@ -134,9 +150,36 @@ export default {
         },
 
       ],
+            itemsGeneralFields: [
+
+        // A regular column
+        'Name',
+        // A regular column
+        'Next Maintenance (days)',
+        'ID',
+        'Actions'
+      ],
       itemsGeneral: [
         {
-          Name: 'Siemens ET200', 'Next Maintenance (days)': 365, ID: 69472374,
+          Name: 'Siemens ET200', 'Next Maintenance (days)': 365, ID: '#20',
+        },
+                {
+          Name: 'Siemens ET300', 'Next Maintenance (days)': 323, ID: '#02',
+        },
+                {
+          Name: 'Siemens ET200', 'Next Maintenance (days)': 36, ID: '#10',
+        },
+                {
+          Name: 'Siemens ET300', 'Next Maintenance (days)': 356, ID: '#04',
+        },
+                {
+          Name: 'Siemens ET300', 'Next Maintenance (days)': 148, ID: '#25',
+        },
+                {
+          Name: 'Siemens ET200', 'Next Maintenance (days)': 134, ID: '#12',
+        },
+                {
+          Name: 'Siemens ET200', 'Next Maintenance (days)': 294, ID: '#40',
         },
 
       ],
