@@ -5,14 +5,48 @@
       <b-card title="General" class="xcard">
         <b-row>
           <b-col md="6">
-            <b-table stacked :items="itemsGeneral"></b-table>
+            <highcharts :options="OverviewChartOptions"></highcharts>
           </b-col>
           <b-col md="6">
-  <div class="btn-toolbar">
-              <b-button > Reset Alarms </b-button>
+            <b-row>
+              <b-col md="6">
+                <b-card title="Letzte Zykluszeit">
+                  <b-card-text>5min</b-card-text>
+                </b-card>
+              </b-col>
+              <b-col md="6">
+                <b-card title="Auschussrate">
+                  <b-card-text>7%</b-card-text>
+                </b-card>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col md="6">
+                <b-card title="Geschwindigkeit Förderband">
+                  <b-card-text>5 P/s</b-card-text>
+                </b-card>
+              </b-col>
+              <b-col md="6">
+                <b-card title="Nächste Wartung" class="h-100">
+                  <b-card-text>365 Tage</b-card-text>
+                </b-card>
+              </b-col>
+            </b-row>
 
-            <b-button>Reset Maintenance </b-button>
-  </div>
+            <b-row>
+              <b-col md="6">
+                <b-card title="Reported Problems" class="h-100">
+                  <b-card-text>2</b-card-text>
+                </b-card>
+              </b-col>
+              <b-col md="6">
+                <b-card title="Report Problem" >
+                  <b-button style="margin: 1px">Fabrikleiter</b-button>
+                  <b-button style="margin: 1px">Versicherung</b-button>
+                </b-card>
+              </b-col>
+            </b-row>
+
           </b-col>
 
         </b-row>
@@ -32,7 +66,7 @@
               </template>
             </b-table>
           </b-col>
-          <b-modal :id="'my-modal'" :title="'Error Description'" ok-only @hide="resetInfoModal">
+          <b-modal :id="'my-modal'" :title="'Error Description'" ok-only >
             <pre>Option handling has been configured but
 more than one power module was configured
 for options handling. The slot of the second
@@ -46,22 +80,7 @@ displayed.</pre>
     </b-col>
 
   </b-row>
-    <b-row >
-    <b-col >
-      <b-card title="Machines" class="xcard">
-        <b-row>
-          <b-col md="12">
-            <b-table :fields="itemsGeneralFields" :items="itemsGeneral"></b-table>
-                          <template #cell(Actions)>
-                <b-button>Select</b-button>
-              </template>
-          </b-col>
-        </b-row>
 
-      </b-card>
-    </b-col>
-
-  </b-row>
   <b-row>
     <b-col>
    <b-card title="Temperature Sensor" class="xcard">
@@ -138,6 +157,53 @@ export default {
           type: 'datetime',
         },
       },
+      OverviewChartOptions: {
+        chart: {
+          type: 'column',
+        },
+        title: {
+          text: 'Alerts',
+        },
+        xAxis: {
+          categories: [
+            'Mon',
+            'Die',
+            'Mit',
+            'Don',
+            'Fre',
+            'Sam',
+            'Son',
+
+          ],
+          crosshair: true,
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: '',
+          },
+        },
+
+        plotOptions: {
+          column: {
+            pointPadding: 0.2,
+            borderWidth: 0,
+          },
+        },
+        series: [{
+          name: 'Critical Erros',
+          data: [1, 4, 6, 9, 14, 7, 5],
+
+        }, {
+          name: 'Normal Errors',
+          data: [21, 23, 12, 5, 12, 2, 4],
+
+        }, {
+          name: 'Downtime (h)',
+          data: [1, 3, 5, 4, 2, 1, 1],
+
+        }],
+      },
       itemsTemp: [
         {
           MAX: 0, AVG: 0, MIN: 9999, 'ALARM COUNT': 0,
@@ -150,35 +216,35 @@ export default {
         },
 
       ],
-            itemsGeneralFields: [
+      itemsGeneralFields: [
 
         // A regular column
         'Name',
         // A regular column
         'Next Maintenance (days)',
-        'ID',
-        'Actions'
+        { key: 'ID', label: 'ID' },
+
       ],
       itemsGeneral: [
         {
           Name: 'Siemens ET200', 'Next Maintenance (days)': 365, ID: '#20',
         },
-                {
+        {
           Name: 'Siemens ET300', 'Next Maintenance (days)': 323, ID: '#02',
         },
-                {
+        {
           Name: 'Siemens ET200', 'Next Maintenance (days)': 36, ID: '#10',
         },
-                {
+        {
           Name: 'Siemens ET300', 'Next Maintenance (days)': 356, ID: '#04',
         },
-                {
+        {
           Name: 'Siemens ET300', 'Next Maintenance (days)': 148, ID: '#25',
         },
-                {
+        {
           Name: 'Siemens ET200', 'Next Maintenance (days)': 134, ID: '#12',
         },
-                {
+        {
           Name: 'Siemens ET200', 'Next Maintenance (days)': 294, ID: '#40',
         },
 
@@ -188,17 +254,17 @@ export default {
         // A regular column
         'Timestamp',
         // A regular column
-        'Machine ID',
+        'Error ID',
         { key: 'error', label: 'Error Code' },
         'Sensor',
         'Event',
       ],
       itemsEvents: [
         {
-          Timestamp: new Date('2021.08.10').toUTCString(), 'Machine ID': '#20', error: '4', Sensor: 'ET200', Event: 'Internal Error',
+          Timestamp: new Date('2021.08.10').toUTCString(), 'Error ID': '#20', error: '4', Sensor: 'ET200', Event: 'Internal Error',
         },
         {
-          Timestamp: new Date('2021.04.10').toUTCString(), 'Machine ID': '#12', error: 's563', Sensor: 'Temperature', Event: 'Under Limit',
+          Timestamp: new Date('2021.04.10').toUTCString(), 'Error ID': '#12', error: 's563', Sensor: 'Temperature', Event: 'Under Limit',
         },
 
       ],
