@@ -8,6 +8,31 @@
               <b-table stacked :items="itemsGeneral"></b-table>
             </b-col>
             <b-col md="6">
+              <b-row>
+                <b-col md="6">
+                  <b-card title="Reported Problems">
+                    <b-card-text>5</b-card-text>
+                  </b-card>
+                </b-col>
+                <b-col md="6">
+                  <b-card title="Fixed Problems">
+                    <b-card-text>2</b-card-text>
+                  </b-card>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md="6">
+                  <b-card title="Nächste Wartung" class="h-100">
+                    <b-card-text>2 Tage</b-card-text>
+                  </b-card>
+                </b-col>
+                <b-col md="6">
+                  <b-card title="Contact" >
+                    <b-button style="margin: 1px">Fabrikleiter</b-button>
+                    <b-button style="margin: 1px">Hersteller</b-button>
+                  </b-card>
+                </b-col>
+              </b-row>
 
             </b-col>
 
@@ -24,6 +49,25 @@
             <b-col cols="12">
 
               <highcharts :options="OverviewChartOptions"></highcharts>
+
+            </b-col>
+          </b-row>
+        </b-card>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <b-card title="Events" class="xcard">
+          <b-row>
+            <b-col cols="12">
+
+              <b-table :fields="itemsProblemsFields" :items="itemsProblems">
+
+                <template #cell(Actions)="data">
+                  <b-button v-if="data.item.Status==='open'">Contact Fabrikleiter</b-button>
+                  <b-button v-else >Show Report</b-button>
+                </template>
+              </b-table>
 
             </b-col>
           </b-row>
@@ -167,6 +211,30 @@ export default {
         },
 
       ],
+      itemsProblemsFields: [
+
+        // A regular column
+        'Date',
+        'Status',
+        'Actions',
+
+      ],
+      itemsProblems: [
+        {
+          Date: new Date('2021.05.10').toUTCString(), Status: 'open', ID: '#20',
+        },
+        {
+          Date: new Date('2021.04.10').toUTCString(), Status: 'open', ID: '#02',
+        },
+        {
+          Date: new Date('2021.03.10').toUTCString(), Status: 'closed', ID: '#10',
+        },
+        {
+          Date: new Date('2021.02.10').toUTCString(), Status: 'closed', ID: '#04',
+        },
+        {
+          Date: new Date('2021.01.09').toUTCString(), Status: 'closed', ID: '#25',
+        }],
 
     };
   },
