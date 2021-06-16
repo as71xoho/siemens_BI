@@ -86,12 +86,12 @@ displayed.</pre>
     <b-row>
       <b-col cols="8">
 
-        <highcharts :options="TimeStopChartOptions"></highcharts>
+        <highcharts :options="HumditidyChartOptions"></highcharts>
 
       </b-col>
       <b-col cols="4">
 
-        <b-table stacked :items="itemsTimeStop"></b-table>
+        <b-table stacked :items="itemsHumditiy"></b-table>
 
       </b-col>
     </b-row>
@@ -129,7 +129,7 @@ export default {
           type: 'datetime',
         },
       },
-      TimeStopChartOptions: {
+      HumditidyChartOptions: {
         series: [{
           data: [], // sample data
         }],
@@ -144,41 +144,41 @@ export default {
         },
 
       ],
-      itemsTimeStop: [
+      itemsHumditidy: [
         {
           MAX: 0, AVG: 0, MIN: 9999, 'ALARM COUNT': 0,
         },
 
       ],
-            itemsGeneralFields: [
+      itemsGeneralFields: [
 
         // A regular column
         'Name',
         // A regular column
         'Next Maintenance (days)',
         'ID',
-        'Actions'
+        'Actions',
       ],
       itemsGeneral: [
         {
           Name: 'Siemens ET200', 'Next Maintenance (days)': 365, ID: '#20',
         },
-                {
+        {
           Name: 'Siemens ET300', 'Next Maintenance (days)': 323, ID: '#02',
         },
-                {
+        {
           Name: 'Siemens ET200', 'Next Maintenance (days)': 36, ID: '#10',
         },
-                {
+        {
           Name: 'Siemens ET300', 'Next Maintenance (days)': 356, ID: '#04',
         },
-                {
+        {
           Name: 'Siemens ET300', 'Next Maintenance (days)': 148, ID: '#25',
         },
-                {
+        {
           Name: 'Siemens ET200', 'Next Maintenance (days)': 134, ID: '#12',
         },
-                {
+        {
           Name: 'Siemens ET200', 'Next Maintenance (days)': 294, ID: '#40',
         },
 
@@ -245,25 +245,26 @@ export default {
 
         this.itemsTemp[0].AVG = this.calcStatistics(this.TempChartOptions.series[0].data);
       }
-      if (topic === '/timestop') {
-        this.TimeStopChartOptions.series[0].data.push(
-          [rawData.timestamp, rawData.timePassed],
+      if (topic === '/humditiy') {
+        this.HumditidyChartOptions.series[0].data.push(
+          [rawData.timestamp, rawData.humditiy],
         );
-        if (this.TimeStopChartOptions.series[0].data.length > 50) {
-          this.TimeStopChartOptions.series[0].data.shift();
+        if (this.HumditidyChartOptions.series[0].data.length > 50) {
+          this.HumditidyChartOptions.series[0].data.shift();
         }
-        if (rawData.timePassed > this.itemsTimeStop[0].MAX) {
-          this.itemsTimeStop[0].MAX = rawData.timePassed;
+        if (rawData.humditiy > this.itemsHumditidy[0].MAX) {
+          this.itemsHumditidy[0].MAX = rawData.humditiy;
         }
-        if (rawData.timePassed < this.itemsTimeStop[0].MIN) {
-          this.itemsTimeStop[0].MIN = rawData.timePassed;
+        if (rawData.humidity < this.itemsHumditidy[0].MIN) {
+          this.itemsHumditidy[0].MIN = rawData.humditiy;
         }
         // eslint-disable-next-line max-len
-        if (rawData.timePassed > store.OptionsTime.MaxValue || rawData.timePassed < store.OptionsTime.MinValue) {
-          this.itemsTimeStop[0]['ALARM COUNT'] += 1;
+        if (rawData.humditiy > store.OptionsHumditiy.MaxValue || rawData.humditiy < store.OptionsHumdity.MinValue) {
+          this.itemsHumditidy[0]['ALARM COUNT'] += 1;
           this.itemsGeneral[0]['Next Maintenance (days)'] -= 1;
         }
-        this.itemsTimeStop[0].AVG = this.calcStatistics(this.TimeStopChartOptions.series[0].data);
+        // eslint-disable-next-line max-len
+        this.HumditidyChartOptions[0].AVG = this.calcStatistics(this.HumditidyChartOptions.series[0].data);
       }
     });
   },

@@ -2,12 +2,12 @@ import Vue from 'vue';
 
 const state = Vue.observable({
   OptionsTemp: {
-    MinValue: 30,
-    MaxValue: 50,
+    MinValue: 80,
+    MaxValue: 95,
   },
-  OptionsTime: {
-    MinValue: 6,
-    MaxValue: 7,
+  OptionsHumditiy: {
+    MinValue: 35,
+    MaxValue: 40,
   },
 });
 export default state;
