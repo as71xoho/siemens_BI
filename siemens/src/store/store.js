@@ -9,5 +9,8 @@ const state = Vue.observable({
     MinValue: 35,
     MaxValue: 40,
   },
+  NextMaintenanceDummyMachine: 365,
+  itemsEvents: [
+  ],
 });
 export default state;

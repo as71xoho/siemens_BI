@@ -28,7 +28,7 @@
               </b-col>
               <b-col md="6">
                 <b-card title="Nächste Wartung" class="h-100">
-                  <b-card-text>365 Tage</b-card-text>
+                  <b-card-text >{{NextMaintenance}} Tage</b-card-text>
                 </b-card>
               </b-col>
             </b-row>
@@ -101,7 +101,7 @@ displayed.</pre>
   </b-row>
   <b-row>
     <b-col>
-  <b-card title="Time  Sensor" class="xcard">
+  <b-card title="Humidity Sensor" class="xcard">
     <b-row>
       <b-col cols="8">
 
@@ -116,13 +116,6 @@ displayed.</pre>
     </b-row>
   </b-card>
     </b-col>
-  </b-row>
-  <b-row>
-   <b-col>
-     <b-card title="Noise Sensor" class="xcard">
-       <highcharts :options="TempChartOptions"></highcharts>
-     </b-card>
-   </b-col>
   </b-row>
 
 </b-container>
@@ -139,6 +132,7 @@ export default {
   },
   data() {
     return {
+      NextMaintenance: store.NextMaintenanceDummyMachine,
       TempChartOptions: {
         series: [{
           data: [], // sample data
@@ -168,7 +162,7 @@ export default {
         xAxis: {
           type: 'datetime',
         },
-                yAxis: {
+        yAxis: {
           plotLines: [{
             color: '#FF0000',
             width: 2,
@@ -283,15 +277,7 @@ export default {
         'Sensor',
         'Event',
       ],
-      itemsEvents: [
-        {
-          Timestamp: new Date('2021.08.10').toUTCString(), 'Error ID': '#20', error: '4', Sensor: 'ET200', Event: 'Internal Error',
-        },
-        {
-          Timestamp: new Date('2021.04.10').toUTCString(), 'Error ID': '#12', error: 's563', Sensor: 'Temperature', Event: 'Under Limit',
-        },
-
-      ],
+      itemsEvents: store.itemsEvents,
 
     };
   },
@@ -304,6 +290,24 @@ export default {
       const sum = data.reduce((pv, cv) => pv + cv, 0);
       const avg = (sum / data.length).toFixed(2);
       return avg;
+    },
+    generateEvent(sensor, eventype) {
+      this.itemsEvents.push({
+        Timestamp: new Date().toUTCString(),
+        'Error ID': '#12',
+        error: 's563',
+        Sensor: sensor,
+        Event: eventype,
+      });
+      store.itemsEvents.push({
+        Timestamp: new Date().toUTCString(),
+        'Error ID': '#12',
+        error: 's563',
+        Sensor: sensor,
+        Event: eventype,
+      });
+      store.NextMaintenanceDummyMachine -= 1;
+      this.NextMaintenance -= 1;
     },
   },
   created() {
@@ -331,6 +335,7 @@ export default {
         if (rawData.temperature > store.OptionsTemp.MaxValue || rawData.temperature < store.OptionsTemp.MinValue) {
           this.itemsTemp[0]['ALARM COUNT'] += 1;
           this.itemsGeneral[0]['Next Maintenance (days)'] -= 5;
+          this.generateEvent('Temerpature', rawData.temperature > store.OptionsTemp.MaxValue ? 'Over Limit' : 'Under Limit');
         }
 
         this.itemsTemp[0].AVG = this.calcStatistics(this.TempChartOptions.series[0].data);
@@ -352,6 +357,7 @@ export default {
         if (rawData.humidity > store.OptionsHumidity.MaxValue || rawData.humidity < store.OptionsHumidity.MinValue) {
           this.itemsHumidity[0]['ALARM COUNT'] += 1;
           this.itemsGeneral[0]['Next Maintenance (days)'] -= 1;
+          this.generateEvent('Humidity', rawData.humidity > store.OptionsHumidity.MaxValue ? 'Over Limit' : 'Under Limit');
         }
         // eslint-disable-next-line max-len
         this.itemsHumidity[0].AVG = this.calcStatistics(this.HumidityChartOptions.series[0].data);
