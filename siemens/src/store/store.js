@@ -5,7 +5,7 @@ const state = Vue.observable({
     MinValue: 80,
     MaxValue: 95,
   },
-  OptionsHumditiy: {
+  OptionsHumidity: {
     MinValue: 35,
     MaxValue: 40,
   },

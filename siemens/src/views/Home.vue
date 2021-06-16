@@ -105,12 +105,12 @@ displayed.</pre>
     <b-row>
       <b-col cols="8">
 
-        <highcharts :options="HumditidyChartOptions"></highcharts>
+        <highcharts :options="HumidityChartOptions"></highcharts>
 
       </b-col>
       <b-col cols="4">
 
-        <b-table stacked :items="itemsHumditiy"></b-table>
+        <b-table stacked :items="itemsHumidity"></b-table>
 
       </b-col>
     </b-row>
@@ -147,14 +147,38 @@ export default {
         xAxis: {
           type: 'datetime',
         },
+        yAxis: {
+          plotLines: [{
+            color: '#FF0000',
+            width: 2,
+            value: store.OptionsTemp.MaxValue,
+          },
+          {
+            color: '#FF0000',
+            width: 2,
+            value: store.OptionsTemp.MinValue,
+          }],
+        },
       },
-      HumditidyChartOptions: {
+      HumidityChartOptions: {
         series: [{
           data: [], // sample data
         }],
         title: '',
         xAxis: {
           type: 'datetime',
+        },
+                yAxis: {
+          plotLines: [{
+            color: '#FF0000',
+            width: 2,
+            value: store.OptionsHumidity.MaxValue,
+          },
+          {
+            color: '#FF0000',
+            width: 2,
+            value: store.OptionsHumidity.MinValue,
+          }],
         },
       },
       OverviewChartOptions: {
@@ -210,7 +234,7 @@ export default {
         },
 
       ],
-      itemsHumditidy: [
+      itemsHumidity: [
         {
           MAX: 0, AVG: 0, MIN: 9999, 'ALARM COUNT': 0,
         },
@@ -311,26 +335,26 @@ export default {
 
         this.itemsTemp[0].AVG = this.calcStatistics(this.TempChartOptions.series[0].data);
       }
-      if (topic === '/humditiy') {
-        this.HumditidyChartOptions.series[0].data.push(
-          [rawData.timestamp, rawData.humditiy],
+      if (topic === '/humidity') {
+        this.HumidityChartOptions.series[0].data.push(
+          [rawData.timestamp, rawData.humidity],
         );
-        if (this.HumditidyChartOptions.series[0].data.length > 50) {
-          this.HumditidyChartOptions.series[0].data.shift();
+        if (this.HumidityChartOptions.series[0].data.length > 50) {
+          this.HumidityChartOptions.series[0].data.shift();
         }
-        if (rawData.humditiy > this.itemsHumditidy[0].MAX) {
-          this.itemsHumditidy[0].MAX = rawData.humditiy;
+        if (rawData.humidity > this.itemsHumidity[0].MAX) {
+          this.itemsHumidity[0].MAX = rawData.humidity;
         }
-        if (rawData.humidity < this.itemsHumditidy[0].MIN) {
-          this.itemsHumditidy[0].MIN = rawData.humditiy;
+        if (rawData.humidity < this.itemsHumidity[0].MIN) {
+          this.itemsHumidity[0].MIN = rawData.humidity;
         }
         // eslint-disable-next-line max-len
-        if (rawData.humditiy > store.OptionsHumditiy.MaxValue || rawData.humditiy < store.OptionsHumdity.MinValue) {
-          this.itemsHumditidy[0]['ALARM COUNT'] += 1;
+        if (rawData.humidity > store.OptionsHumidity.MaxValue || rawData.humidity < store.OptionsHumidity.MinValue) {
+          this.itemsHumidity[0]['ALARM COUNT'] += 1;
           this.itemsGeneral[0]['Next Maintenance (days)'] -= 1;
         }
         // eslint-disable-next-line max-len
-        this.HumditidyChartOptions[0].AVG = this.calcStatistics(this.HumditidyChartOptions.series[0].data);
+        this.itemsHumidity[0].AVG = this.calcStatistics(this.HumidityChartOptions.series[0].data);
       }
     });
   },
