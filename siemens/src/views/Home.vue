@@ -4,7 +4,7 @@
 
     <b-col cols="12">
 
-      <b-card title="ACHTUNG" class="xcard" bg-variant="danger">
+      <b-card title="ACHTUNG" class="xcard" bg-variant="danger" ref="attention">
       <b-card-text>Mehrere Fehler erkannt. Maschine im halte Modus.</b-card-text>
       <b-card-footer>
         <b-button style="margin: 1px">Report Anzeigen</b-button>
