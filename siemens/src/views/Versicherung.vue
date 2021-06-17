@@ -23,7 +23,7 @@
               <b-row>
                 <b-col md="6">
                   <b-card title="Nächste Wartung" class="h-100">
-                    <b-card-text>2 Tage</b-card-text>
+                    <b-card-text>{{nextMaintenance}} Tage</b-card-text>
                   </b-card>
                 </b-col>
                 <b-col md="6">
@@ -61,7 +61,7 @@
           <b-row>
             <b-col cols="12">
 
-              <b-table :fields="itemsProblemsFields" :items="itemsProblems">
+              <b-table :fields="itemsProblemsFields" :items="events">
 
                 <template #cell(Actions)="data">
                   <b-button v-if="data.item.Status==='open'">Contact Fabrikleiter</b-button>
@@ -94,6 +94,8 @@
 </template>
 
 <script>
+import store from '@/store/store';
+
 export default {
   name: 'Versicherung',
   data() {
@@ -237,6 +239,14 @@ export default {
         }],
 
     };
+  },
+  computed: {
+    nextMaintenance() {
+      return store.NextMaintenanceDummyMachine;
+    },
+    events() {
+      return store.itemsEventsVerischerung;
+    },
   },
 };
 </script>

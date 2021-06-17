@@ -42,6 +42,6 @@ function sendDataHumidityError() {
 }
 setInterval(sendDataTemperature, 1500 );
 setInterval(sendDataHumidity, 1500 );
-setInterval(sendDataTemperatureError, 50000 );
-setInterval(sendDataHumidityError, 50000 );
+setInterval(sendDataTemperatureError, 5000 );
+setInterval(sendDataHumidityError, 5000 );
 

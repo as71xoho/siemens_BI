@@ -10,6 +10,15 @@ const state = Vue.observable({
     MaxValue: 40,
   },
   NextMaintenanceDummyMachine: 365,
+  ProductionStopped: false,
+  ReportedProblems: 0,
+  ReportedProblemsVersicherung: 0,
+  itemsEventsVerischerung: [
+
+    {
+      Date: new Date('2020.01.01').toUTCString(), Status: 'closed', ID: '#20',
+    },
+  ],
   itemsEvents: [
   ],
 });

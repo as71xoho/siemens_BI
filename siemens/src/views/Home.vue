@@ -1,5 +1,19 @@
 <template >
 <b-container>
+  <b-row v-if="productionStopped">
+
+    <b-col cols="12">
+
+      <b-card title="ACHTUNG" class="xcard" bg-variant="danger">
+      <b-card-text>Mehrere Fehler erkannt. Maschine im halte Modus.</b-card-text>
+      <b-card-footer>
+        <b-button style="margin: 1px">Report Anzeigen</b-button>
+        <b-button style="margin: 1px">Fortsetzen</b-button>
+      </b-card-footer>
+      </b-card>
+
+    </b-col>
+  </b-row>
   <b-row >
     <b-col >
       <b-card title="General" class="xcard">
@@ -36,7 +50,7 @@
             <b-row>
               <b-col md="6">
                 <b-card title="Reported Problems" class="h-100">
-                  <b-card-text>2</b-card-text>
+                  <b-card-text>{{reportedProblems}}</b-card-text>
                 </b-card>
               </b-col>
               <b-col md="6">
@@ -276,10 +290,22 @@ export default {
         { key: 'error', label: 'Error Code' },
         'Sensor',
         'Event',
+        'Report ID',
       ],
-      itemsEvents: store.itemsEvents,
+      productionIsStopped: false,
 
     };
+  },
+  computed: {
+    itemsEvents() {
+      return store.itemsEvents;
+    },
+    reportedProblems() {
+      return store.ReportedProblems;
+    },
+    productionStopped() {
+      return store.ProductionStopped;
+    },
   },
   methods: {
     calcStatistics(param) {
@@ -292,22 +318,24 @@ export default {
       return avg;
     },
     generateEvent(sensor, eventype) {
-      this.itemsEvents.push({
-        Timestamp: new Date().toUTCString(),
-        'Error ID': '#12',
-        error: 's563',
-        Sensor: sensor,
-        Event: eventype,
-      });
       store.itemsEvents.push({
         Timestamp: new Date().toUTCString(),
         'Error ID': '#12',
         error: 's563',
         Sensor: sensor,
         Event: eventype,
+        'Report ID': '',
       });
       store.NextMaintenanceDummyMachine -= 1;
       this.NextMaintenance -= 1;
+      if (store.itemsEvents.length > 5) {
+        store.ReportedProblems += 1;
+        store.ProductionStopped = true;
+        store.itemsEventsVerischerung.push({ Date: new Date().toUTCString(), Status: 'open', ID: `#${store.ReportedProblems}` });
+        for (let i = 0; i < store.itemsEvents.length; i++) {
+          store.itemsEvents[i]['Report ID'] = `#${store.ReportedProblems}`;
+        }
+      }
     },
   },
   created() {
@@ -318,6 +346,9 @@ export default {
       });
     });
     client.on('message', (topic, message) => {
+      if (this.productionStopped) {
+        return;
+      }
       // message is Buffer
       const rawData = JSON.parse(message.toString());
       if (topic === '/temperature') {
