@@ -64,8 +64,8 @@
               <b-table :fields="itemsProblemsFields" :items="events">
 
                 <template #cell(Actions)="data">
-                  <b-button v-if="data.item.Status==='open'">Contact Fabrikleiter</b-button>
-                  <b-button v-else >Show Report</b-button>
+                  <b-button v-if="data.item.Status==='open'">Kontakt aufnehmen</b-button>
+                  <b-button v-else >Report anzeigen</b-button>
                 </template>
               </b-table>
 
@@ -77,11 +77,114 @@
 
     <b-row>
       <b-col>
-        <b-card title="Risk of failure (next 30 days)" class="xcard">
+        <b-card title="Auswertungen" class="xcard">
           <b-row>
             <b-col cols="12">
 
-              <highcharts :options="GaugeChartOptions"></highcharts>
+              <b-table :fields="itemsAuswertungenFields" :items="itemsAuswertungen">
+                <template #cell(Details)="row">
+
+                  <b-form-checkbox v-model="row.detailsShowing" @change="row.toggleDetails">
+                    Details
+                  </b-form-checkbox>
+                </template>
+
+                <template #row-details="row">
+                  <b-card>
+                    <b-row>
+                      <b-col cols="8" v-if="row.index!==0" >
+                        <highcharts :options="AuswertungenChartOptions">
+
+                      </highcharts>
+                      </b-col>
+                      <b-col cols="8" v-else > <highcharts :options="AuswertungenChartAktuell">
+
+                      </highcharts>
+                      </b-col>
+
+                      <b-col cols="4" v-if="row.index!==0" >
+                        <b-row>
+                        <b-col md="6">
+                          <b-card title="Anzahl an kritischen Events">
+                            <b-card-text>o</b-card-text>
+                          </b-card>
+                        </b-col>
+                        <b-col md="6">
+                          <b-card title="Ausgezahlte Leistungen" class="h-100">
+                            <b-card-text>0€</b-card-text>
+                          </b-card>
+                        </b-col>
+                      </b-row>
+                        <b-row>
+                          <b-col md="6">
+                            <b-card title="Erwartete Wartungen">
+                              <b-card-text>5</b-card-text>
+                            </b-card>
+                          </b-col>
+                          <b-col md="6">
+                            <b-card title="Tatsächliche Wartungen" class="h-100">
+                              <b-card-text >8</b-card-text>
+                            </b-card>
+                          </b-col>
+                        </b-row>
+
+                        <b-row>
+                          <b-col md="6">
+                            <b-card title="Ausfallzeit (h)" class="h-100">
+                              <b-card-text>3</b-card-text>
+                            </b-card>
+                          </b-col>
+                          <b-col md="6">
+                            <b-card title="Anpassung Beitrag?" >
+                              <b-card-text>Nein</b-card-text>
+                            </b-card>
+                          </b-col>
+                        </b-row></b-col>
+
+                        <b-col cols="4" v-else>
+                          <b-row>
+                            <b-col md="6">
+                              <b-card title="Anzahl an kritischen Events">
+                                <b-card-text>1</b-card-text>
+                              </b-card>
+                            </b-col>
+                            <b-col md="6">
+                              <b-card title="Ausgezahlte Leistungen" class="h-100">
+                                <b-card-text>4000€</b-card-text>
+                              </b-card>
+                            </b-col>
+                          </b-row>
+                          <b-row>
+                            <b-col md="6">
+                              <b-card title="Erwartete Wartungen">
+                                <b-card-text>5</b-card-text>
+                              </b-card>
+                            </b-col>
+                            <b-col md="6">
+                              <b-card title="Tatsächliche Wartungen" class="h-100">
+                                <b-card-text >1</b-card-text>
+                              </b-card>
+                            </b-col>
+                          </b-row>
+
+                          <b-row>
+                            <b-col md="6">
+                              <b-card title="Ausfallzeit (h)" class="h-100">
+                                <b-card-text>8</b-card-text>
+                              </b-card>
+                            </b-col>
+                            <b-col md="6">
+                              <b-card title="Anpassung Beitrag?" >
+                                <b-card-text>Ja</b-card-text>
+                              </b-card>
+                            </b-col>
+                          </b-row></b-col>
+
+                    </b-row>
+
+                  </b-card>
+                </template>
+              </b-table>
 
             </b-col>
 
@@ -216,9 +319,9 @@ export default {
       itemsProblemsFields: [
 
         // A regular column
-        'Date',
+        'Datum',
         'Status',
-        'Actions',
+        'Aktionen',
 
       ],
       itemsProblems: [
@@ -237,6 +340,130 @@ export default {
         {
           Date: new Date('2021.01.09').toUTCString(), Status: 'closed', ID: '#25',
         }],
+      itemsAuswertungenFields: [
+
+        // A regular column
+        'Datum',
+        'Quartal',
+        'Details',
+
+      ],
+      itemsAuswertungen: [
+        {
+          Datum: new Date().toUTCString(), Quartal: '3',
+        },
+        {
+          Datum: new Date('2021.05.30').toUTCString(), Quartal: '2',
+        },
+        {
+          Datum: new Date('2021.03.31').toUTCString(), Quartal: '1',
+        },
+        {
+          Datum: new Date('2020.12.31').toUTCString(), Quartal: '4',
+        },
+        {
+          Datum: new Date('2020.09.30').toUTCString(), Quartal: '3',
+        }],
+      AuswertungenChartOptions: {
+        chart: {
+          type: 'line',
+        },
+        title: {
+          text: 'Zusammenfassung',
+        },
+        xAxis: {
+          type: 'datetime',
+          tickInterval: 1000 * 3600 * 24 * 30,
+        },
+        yAxis: {
+          title: {
+            text: 'Alerts',
+          },
+        },
+
+        plotOptions: {
+          column: {
+            pointPadding: 0.2,
+            borderWidth: 0,
+          },
+        },
+        series: [{
+          name: 'Kritische Events',
+          data: [[Date.UTC(2021, 0, 1), 0], [Date.UTC(2021, 1, 1), 0], [Date.UTC(2021, 2, 1), 2]],
+
+        },
+        {
+          name: 'Erwartete Wartungen',
+          data: [[Date.UTC(2021, 0, 1), 2], [Date.UTC(2021, 1, 1), 2], [Date.UTC(2021, 2, 1), 1]],
+
+        },
+        {
+          name: 'Tatsächliche Wartungen',
+          data: [[Date.UTC(2021, 0, 1), 2], [Date.UTC(2021, 1, 1), 2], [Date.UTC(2021, 2, 1), 6]],
+
+        },
+        {
+          name: 'Ausfallzeit',
+          data: [[Date.UTC(2021, 0, 1), 1], [Date.UTC(2021, 1, 1), 2], [Date.UTC(2021, 2, 1), 0]],
+
+        },
+        {
+          name: 'Ausgezahlte Leistungen',
+          data: [[Date.UTC(2021, 0, 1), 0], [Date.UTC(2021, 1, 1), 0], [Date.UTC(2021, 2, 1), 0]],
+
+        },
+        ],
+      },
+      AuswertungenChartAktuell: {
+        chart: {
+          type: 'line',
+        },
+        title: {
+          text: 'Zusammenfassung',
+        },
+        xAxis: {
+          type: 'datetime',
+          tickInterval: 1000 * 3600 * 24 * 30,
+        },
+        yAxis: {
+          title: {
+            text: 'Alerts',
+          },
+        },
+
+        plotOptions: {
+          column: {
+            pointPadding: 0.2,
+            borderWidth: 0,
+          },
+        },
+        series: [{
+          name: 'Kritische Events',
+          data: [[Date.UTC(2021, 5, 1), 0]],
+
+        },
+        {
+          name: 'Erwartete Wartungen',
+          data: [[Date.UTC(2021, 5, 1), 2], [Date.UTC(2021, 6, 1), 2], [Date.UTC(2021, 6, 1), 2]],
+
+        },
+        {
+          name: 'Tatsächliche Wartungen',
+          data: [[Date.UTC(2021, 5, 1), 0]],
+
+        },
+        {
+          name: 'Ausfallzeit',
+          data: [[Date.UTC(2021, 5, 1), 5]],
+
+        },
+        {
+          name: 'Ausgezahlte Leistungen',
+          data: [[Date.UTC(2021, 5, 1), 4000]],
+
+        },
+        ],
+      },
 
     };
   },
