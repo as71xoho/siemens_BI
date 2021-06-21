@@ -49,12 +49,12 @@
 
             <b-row>
               <b-col md="6">
-                <b-card title="Reported Problems" class="h-100">
+                <b-card title="Gemeldete Probleme" class="h-100">
                   <b-card-text>{{reportedProblems}}</b-card-text>
                 </b-card>
               </b-col>
               <b-col md="6">
-                <b-card title="Report Problem" >
+                <b-card title="Problem melden" >
                   <b-button style="margin: 1px">Fabrikleiter</b-button>
                   <b-button style="margin: 1px">Versicherung</b-button>
                 </b-card>
@@ -71,7 +71,7 @@
   </b-row>
   <b-row >
     <b-col >
-      <b-card title="Last events" class="xcard">
+      <b-card title="Ereignisse" class="xcard">
         <b-row>
           <b-col md="12">
             <b-table :fields="itemsEventsFields"  :items="itemsEvents">
@@ -97,7 +97,7 @@ displayed.</pre>
 
   <b-row>
     <b-col>
-   <b-card title="Temperature Sensor" class="xcard">
+   <b-card title="Temperatur" class="xcard">
      <b-row>
    <b-col cols="8">
 
@@ -115,7 +115,7 @@ displayed.</pre>
   </b-row>
   <b-row>
     <b-col>
-  <b-card title="Humidity Sensor" class="xcard">
+  <b-card title="Luftfeuchtigkeit" class="xcard">
     <b-row>
       <b-col cols="8">
 
@@ -223,28 +223,28 @@ export default {
           },
         },
         series: [{
-          name: 'Critical Erros',
+          name: 'Kritische Fehler',
           data: [1, 4, 6, 9, 14, 7, 5],
 
         }, {
-          name: 'Normal Errors',
+          name: 'Normale Fehler',
           data: [21, 23, 12, 5, 12, 2, 4],
 
         }, {
-          name: 'Downtime (h)',
+          name: 'Ausfallzeit (h)',
           data: [1, 3, 5, 4, 2, 1, 1],
 
         }],
       },
       itemsTemp: [
         {
-          MAX: 0, AVG: 0, MIN: 9999, 'ALARM COUNT': 0,
+          MAX: 0, AVG: 0, MIN: 9999, 'ALARM ANZAHL': 0,
         },
 
       ],
       itemsHumidity: [
         {
-          MAX: 0, AVG: 0, MIN: 9999, 'ALARM COUNT': 0,
+          MAX: 0, AVG: 0, MIN: 9999, 'ALARM ANZAHL': 0,
         },
 
       ],
@@ -253,31 +253,31 @@ export default {
         // A regular column
         'Name',
         // A regular column
-        'Next Maintenance (days)',
+        'Nächste Wartung (days)',
         { key: 'ID', label: 'ID' },
 
       ],
       itemsGeneral: [
         {
-          Name: 'Siemens ET200', 'Next Maintenance (days)': 365, ID: '#20',
+          Name: 'Siemens ET200', 'Nächste Wartung (days)': 365, ID: '#20',
         },
         {
-          Name: 'Siemens ET300', 'Next Maintenance (days)': 323, ID: '#02',
+          Name: 'Siemens ET300', 'Nächste Wartung (days)': 323, ID: '#02',
         },
         {
-          Name: 'Siemens ET200', 'Next Maintenance (days)': 36, ID: '#10',
+          Name: 'Siemens ET200', 'Nächste Wartung (days)': 36, ID: '#10',
         },
         {
-          Name: 'Siemens ET300', 'Next Maintenance (days)': 356, ID: '#04',
+          Name: 'Siemens ET300', 'Nächste Wartung (days)': 356, ID: '#04',
         },
         {
-          Name: 'Siemens ET300', 'Next Maintenance (days)': 148, ID: '#25',
+          Name: 'Siemens ET300', 'Nächste Wartung (days)': 148, ID: '#25',
         },
         {
-          Name: 'Siemens ET200', 'Next Maintenance (days)': 134, ID: '#12',
+          Name: 'Siemens ET200', 'Nächste Wartung (days)': 134, ID: '#12',
         },
         {
-          Name: 'Siemens ET200', 'Next Maintenance (days)': 294, ID: '#40',
+          Name: 'Siemens ET200', 'Nächste Wartung (days)': 294, ID: '#40',
         },
 
       ],
@@ -331,7 +331,7 @@ export default {
       if (store.itemsEvents.length > 5) {
         store.ReportedProblems += 1;
         store.ProductionStopped = true;
-        store.itemsEventsVerischerung.push({ Date: new Date().toUTCString(), Status: 'open', ID: `#${store.ReportedProblems}` });
+        store.itemsEventsVerischerung.push({ Datum: new Date().toUTCString(), Status: 'offen', ID: `#${store.ReportedProblems}` });
         for (let i = 0; i < store.itemsEvents.length; i++) {
           store.itemsEvents[i]['Report ID'] = `#${store.ReportedProblems}`;
         }
@@ -364,9 +364,9 @@ export default {
         }
         // eslint-disable-next-line max-len
         if (rawData.temperature > store.OptionsTemp.MaxValue || rawData.temperature < store.OptionsTemp.MinValue) {
-          this.itemsTemp[0]['ALARM COUNT'] += 1;
-          this.itemsGeneral[0]['Next Maintenance (days)'] -= 5;
-          this.generateEvent('Temerpature', rawData.temperature > store.OptionsTemp.MaxValue ? 'Over Limit' : 'Under Limit');
+          this.itemsTemp[0]['ALARM ANZAHL'] += 1;
+          this.itemsGeneral[0]['Nächste Wartung (days)'] -= 5;
+          this.generateEvent('Temperatur', rawData.temperature > store.OptionsTemp.MaxValue ? 'Über Limit' : 'Unter Limit');
         }
 
         this.itemsTemp[0].AVG = this.calcStatistics(this.TempChartOptions.series[0].data);
@@ -386,9 +386,9 @@ export default {
         }
         // eslint-disable-next-line max-len
         if (rawData.humidity > store.OptionsHumidity.MaxValue || rawData.humidity < store.OptionsHumidity.MinValue) {
-          this.itemsHumidity[0]['ALARM COUNT'] += 1;
-          this.itemsGeneral[0]['Next Maintenance (days)'] -= 1;
-          this.generateEvent('Humidity', rawData.humidity > store.OptionsHumidity.MaxValue ? 'Over Limit' : 'Under Limit');
+          this.itemsHumidity[0]['ALARM ANZAHL'] += 1;
+          this.itemsGeneral[0]['Nächste Wartung (days)'] -= 1;
+          this.generateEvent('Humidity', rawData.humidity > store.OptionsHumidity.MaxValue ? 'Über Limit' : 'Unter Limit');
         }
         // eslint-disable-next-line max-len
         this.itemsHumidity[0].AVG = this.calcStatistics(this.HumidityChartOptions.series[0].data);

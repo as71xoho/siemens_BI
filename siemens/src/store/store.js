@@ -16,7 +16,7 @@ const state = Vue.observable({
   itemsEventsVerischerung: [
 
     {
-      Date: new Date('2020.01.01').toUTCString(), Status: 'closed', ID: '#20',
+      Datum: new Date('2020.01.01').toUTCString(), Status: 'geschlossen', ID: '#20',
     },
   ],
   itemsEvents: [

@@ -2,7 +2,7 @@
   <b-container>
     <b-row >
       <b-col >
-        <b-card title="General" class="xcard">
+        <b-card title="Allgemein" class="xcard">
           <b-row>
             <b-col md="6">
               <b-table stacked :items="itemsGeneral"></b-table>
@@ -10,12 +10,12 @@
             <b-col md="6">
               <b-row>
                 <b-col md="6">
-                  <b-card title="Reported Problems">
+                  <b-card title="Gemeldete Pobleme">
                     <b-card-text>5</b-card-text>
                   </b-card>
                 </b-col>
                 <b-col md="6">
-                  <b-card title="Fixed Problems">
+                  <b-card title="Gelöste Probleme">
                     <b-card-text>2</b-card-text>
                   </b-card>
                 </b-col>
@@ -27,7 +27,7 @@
                   </b-card>
                 </b-col>
                 <b-col md="6">
-                  <b-card title="Contact" >
+                  <b-card title="Kontakt" >
                     <b-button style="margin: 1px">Fabrikleiter</b-button>
                     <b-button style="margin: 1px">Hersteller</b-button>
                   </b-card>
@@ -44,7 +44,7 @@
     </b-row>
     <b-row>
       <b-col>
-        <b-card title="Overview" class="xcard">
+        <b-card title="Übersicht" class="xcard">
           <b-row>
             <b-col cols="12">
 
@@ -57,14 +57,14 @@
     </b-row>
     <b-row>
       <b-col>
-        <b-card title="Events" class="xcard">
+        <b-card title="Ereignisse" class="xcard">
           <b-row>
             <b-col cols="12">
 
               <b-table :fields="itemsProblemsFields" :items="events">
 
-                <template #cell(Actions)="data">
-                  <b-button v-if="data.item.Status==='open'">Kontakt aufnehmen</b-button>
+                <template #cell(Aktionen)="data">
+                  <b-button v-if="data.item.Status==='offen'">Kontakt aufnehmen</b-button>
                   <b-button v-else >Report anzeigen</b-button>
                 </template>
               </b-table>
@@ -208,22 +208,22 @@ export default {
           type: 'column',
         },
         title: {
-          text: 'Alerts across all Machines',
+          text: 'Auswertungen aller Maschinen',
         },
         xAxis: {
           categories: [
             'Jan',
             'Feb',
-            'Mar',
+            'Mär',
             'Apr',
-            'May',
+            'Mai',
             'Jun',
             'Jul',
             'Aug',
             'Sep',
-            'Oct',
+            'Okt',
             'Nov',
-            'Dec',
+            'Dez',
           ],
           crosshair: true,
         },
@@ -241,19 +241,19 @@ export default {
           },
         },
         series: [{
-          name: 'Critical Alerts',
+          name: 'Kritische Fehler',
           data: [10, 7, 6, 9, 14, 7, 5, 8, 16, 4, 5, 27],
 
         }, {
-          name: 'Normal Alerts',
+          name: 'Normale Fehler',
           data: [20, 12, 21, 15, 16, 6, 12, 18, 5, 7, 10, 50],
 
         }, {
-          name: 'Maintenances',
+          name: 'Wartungen',
           data: [1, 0, 3, 1, 4, 8, 0, 0, 4, 5, 9, 20],
 
         }, {
-          name: 'Downtimes (h)',
+          name: 'Ausfallzeiten (h)',
           data: [10, 12, 11, 8, 30, 7, 7, 6, 7, 9, 10, 51.1],
 
         }],
@@ -312,7 +312,7 @@ export default {
       ],
       itemsGeneral: [
         {
-          'Costumer Name': 'Leipzig Cola', 'Costumer Machines Count': 20, 'Contract Number': 69472374,
+          Versicherungsnehmer: 'Mannheim Cola', 'Anzahl Maschinen': 20, Vertragsnummer: 69472374,
         },
 
       ],
