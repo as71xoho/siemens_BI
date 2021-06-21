@@ -24,20 +24,21 @@
           <b-col md="6">
             <b-row>
               <b-col md="6">
-                <b-card title="Letzte Zykluszeit">
-                  <b-card-text>5min</b-card-text>
+                <b-card title="Versicherungspartner">
+                  <b-card-text>Insurance 21</b-card-text>
                 </b-card>
               </b-col>
               <b-col md="6">
-                <b-card title="Auschussrate">
-                  <b-card-text>7%</b-card-text>
+                <b-card title="Versicherungslevel">
+                  <b-card-text>85%</b-card-text>
                 </b-card>
               </b-col>
             </b-row>
             <b-row>
               <b-col md="6">
-                <b-card title="Geschwindigkeit Förderband">
-                  <b-card-text>5 P/s</b-card-text>
+                <b-card title="Produktivität" class="h-100">
+                  <b-card-text>Aktuell: {{produktivität}}%</b-card-text>
+                  <b-card-text>Durchschnitt: {{produktivitätdurchschnitt}}%</b-card-text>
                 </b-card>
               </b-col>
               <b-col md="6">
@@ -146,6 +147,8 @@ export default {
   },
   data() {
     return {
+      Produktivität: 86.5,
+      ProduktivitätDurchschnitt: 86.5,
       NextMaintenance: store.NextMaintenanceDummyMachine,
       TempChartOptions: {
         series: [{
@@ -194,7 +197,7 @@ export default {
           type: 'column',
         },
         title: {
-          text: 'Alerts',
+          text: 'Wochenübersicht',
         },
         xAxis: {
           categories: [
@@ -224,15 +227,15 @@ export default {
         },
         series: [{
           name: 'Kritische Fehler',
-          data: [1, 4, 6, 9, 14, 7, 5],
+          data: [1, 0, 0, 2, 1, 2, 3],
 
         }, {
           name: 'Normale Fehler',
-          data: [21, 23, 12, 5, 12, 2, 4],
+          data: [2, 1, 4, 0, 0, 2, 4],
 
         }, {
           name: 'Ausfallzeit (h)',
-          data: [1, 3, 5, 4, 2, 1, 1],
+          data: [1, 0.5, 1, 1, 2, 3, 5],
 
         }],
       },
@@ -259,25 +262,25 @@ export default {
       ],
       itemsGeneral: [
         {
-          Name: 'Siemens ET200', 'Nächste Wartung (days)': 365, ID: '#20',
+          Name: 'Siemens ET200', 'Nächste Wartung (Tage)': 365, ID: '#20',
         },
         {
-          Name: 'Siemens ET300', 'Nächste Wartung (days)': 323, ID: '#02',
+          Name: 'Siemens ET300', 'Nächste Wartung (Tage)': 323, ID: '#02',
         },
         {
-          Name: 'Siemens ET200', 'Nächste Wartung (days)': 36, ID: '#10',
+          Name: 'Siemens ET200', 'Nächste Wartung (Tage)': 36, ID: '#10',
         },
         {
-          Name: 'Siemens ET300', 'Nächste Wartung (days)': 356, ID: '#04',
+          Name: 'Siemens ET300', 'Nächste Wartung (Tage)': 356, ID: '#04',
         },
         {
-          Name: 'Siemens ET300', 'Nächste Wartung (days)': 148, ID: '#25',
+          Name: 'Siemens ET300', 'Nächste Wartung (Tage)': 148, ID: '#25',
         },
         {
-          Name: 'Siemens ET200', 'Nächste Wartung (days)': 134, ID: '#12',
+          Name: 'Siemens ET200', 'Nächste Wartung (Tage)': 134, ID: '#12',
         },
         {
-          Name: 'Siemens ET200', 'Nächste Wartung (days)': 294, ID: '#40',
+          Name: 'Siemens ET200', 'Nächste Wartung (Tage)': 294, ID: '#40',
         },
 
       ],
@@ -306,6 +309,12 @@ export default {
     productionStopped() {
       return store.ProductionStopped;
     },
+    produktivität() {
+      return this.Produktivität;
+    },
+    produktivitätdurchschnitt() {
+      return this.ProduktivitätDurchschnitt;
+    },
   },
   methods: {
     calcStatistics(param) {
@@ -331,6 +340,8 @@ export default {
       if (store.itemsEvents.length > 5) {
         store.ReportedProblems += 1;
         store.ProductionStopped = true;
+        this.Produktivität = 0;
+        this.ProduktivitätDurchschnitt = 84;
         store.itemsEventsVerischerung.push({ Datum: new Date().toUTCString(), Status: 'offen', ID: `#${store.ReportedProblems}` });
         for (let i = 0; i < store.itemsEvents.length; i++) {
           store.itemsEvents[i]['Report ID'] = `#${store.ReportedProblems}`;
@@ -365,7 +376,7 @@ export default {
         // eslint-disable-next-line max-len
         if (rawData.temperature > store.OptionsTemp.MaxValue || rawData.temperature < store.OptionsTemp.MinValue) {
           this.itemsTemp[0]['ALARM ANZAHL'] += 1;
-          this.itemsGeneral[0]['Nächste Wartung (days)'] -= 5;
+          this.itemsGeneral[0]['Nächste Wartung (Tage)'] -= 5;
           this.generateEvent('Temperatur', rawData.temperature > store.OptionsTemp.MaxValue ? 'Über Limit' : 'Unter Limit');
         }
 
@@ -387,7 +398,7 @@ export default {
         // eslint-disable-next-line max-len
         if (rawData.humidity > store.OptionsHumidity.MaxValue || rawData.humidity < store.OptionsHumidity.MinValue) {
           this.itemsHumidity[0]['ALARM ANZAHL'] += 1;
-          this.itemsGeneral[0]['Nächste Wartung (days)'] -= 1;
+          this.itemsGeneral[0]['Nächste Wartung (Tage)'] -= 1;
           this.generateEvent('Humidity', rawData.humidity > store.OptionsHumidity.MaxValue ? 'Über Limit' : 'Unter Limit');
         }
         // eslint-disable-next-line max-len

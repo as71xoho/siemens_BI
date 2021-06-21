@@ -29,13 +29,14 @@
       </b-navbar>
     </div>
     <div>
-      <b-sidebar id="sidebar-1" title="Sidebar" shadow>
+      <b-sidebar id="sidebar-1" title="Maschinenbestand" shadow>
         <b-table :fields="itemsGeneralFields" :items="itemsGeneral">
 
           <template #cell(ID)="data">
-            <b-button>Select Machine {{data.item.ID}}</b-button>
+            <b-button>Maschine auswählen {{data.item.ID}}</b-button>
           </template>
         </b-table>
+        <b-button to="newmachine"> Angebote einholen</b-button>
       </b-sidebar>
     </div>
     <div>
@@ -59,31 +60,31 @@ export default {
         // A regular column
         'Name',
         // A regular column
-        'Next Maintenance (days)',
+        'Nächste Wartung (Tage)',
         { key: 'ID', label: 'ID' },
 
       ],
       itemsGeneral: [
         {
-          Name: 'Siemens ET200', 'Next Maintenance (days)': 365, ID: '#20',
+          Name: 'Siemens ET200', 'Nächste Wartung (Tage)': 365, ID: '#20',
         },
         {
-          Name: 'Siemens ET300', 'Next Maintenance (days)': 323, ID: '#02',
+          Name: 'Siemens ET300', 'Nächste Wartung (Tage)': 323, ID: '#02',
         },
         {
-          Name: 'Siemens ET200', 'Next Maintenance (days)': 36, ID: '#10',
+          Name: 'Siemens ET200', 'Nächste Wartung (Tage)': 36, ID: '#10',
         },
         {
-          Name: 'Siemens ET300', 'Next Maintenance (days)': 356, ID: '#04',
+          Name: 'Siemens ET300', 'Nächste Wartung (Tage)': 356, ID: '#04',
         },
         {
-          Name: 'Siemens ET300', 'Next Maintenance (days)': 148, ID: '#25',
+          Name: 'Siemens ET300', 'Nächste Wartung (Tage)': 148, ID: '#25',
         },
         {
-          Name: 'Siemens ET200', 'Next Maintenance (days)': 134, ID: '#12',
+          Name: 'Siemens ET200', 'Nächste Wartung (Tage)': 134, ID: '#12',
         },
         {
-          Name: 'Siemens ET200', 'Next Maintenance (days)': 294, ID: '#40',
+          Name: 'Siemens ET200', 'Nächste Wartung (Tage)': 294, ID: '#40',
         },
 
       ],

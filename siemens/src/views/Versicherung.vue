@@ -106,7 +106,7 @@
                         <b-row>
                         <b-col md="6">
                           <b-card title="Anzahl an kritischen Events">
-                            <b-card-text>o</b-card-text>
+                            <b-card-text>0</b-card-text>
                           </b-card>
                         </b-col>
                         <b-col md="6">
@@ -439,7 +439,8 @@ export default {
         },
         series: [{
           name: 'Kritische Events',
-          data: [[Date.UTC(2021, 5, 1), 0]],
+          data: [[Date.UTC(2021, 5, 1), 0], [Date.UTC(2021, 5, 10), 0],
+            [Date.UTC(2021, 5, 15), 1], [Date.UTC(2021, 5, 20), 2]],
 
         },
         {
@@ -449,17 +450,19 @@ export default {
         },
         {
           name: 'Tatsächliche Wartungen',
-          data: [[Date.UTC(2021, 5, 1), 0]],
+          data: [[Date.UTC(2021, 5, 1), 0], [Date.UTC(2021, 5, 10), 0],
+            [Date.UTC(2021, 5, 15), 1], [Date.UTC(2021, 5, 20), 2]],
 
         },
         {
           name: 'Ausfallzeit',
-          data: [[Date.UTC(2021, 5, 1), 5]],
+          data: [[Date.UTC(2021, 5, 1), 1], [Date.UTC(2021, 5, 10), 2],
+            [Date.UTC(2021, 5, 15), 3], [Date.UTC(2021, 5, 20), 4]],
 
         },
         {
           name: 'Ausgezahlte Leistungen',
-          data: [[Date.UTC(2021, 5, 1), 4000]],
+          data: [[Date.UTC(2021, 5, 21), 4000]],
 
         },
         ],
