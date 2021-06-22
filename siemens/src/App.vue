@@ -2,7 +2,7 @@
   <div id="app">
     <div>
       <b-navbar toggleable="lg" type="dark">
-        <b-navbar-brand href="#" v-b-toggle.sidebar-1>SIEMENS CLOWDY</b-navbar-brand>
+        <b-navbar-brand href="#" v-b-toggle.sidebar-1>CLOUDY</b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 

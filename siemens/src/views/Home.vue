@@ -82,11 +82,7 @@
             </b-table>
           </b-col>
           <b-modal :id="'my-modal'" :title="'Error Description'" ok-only >
-            <pre>Option handling has been configured but
-more than one power module was configured
-for options handling. The slot of the second
-power module that has option handling is
-displayed.</pre>
+            <pre>Der Sensor meldete Werte außerhalb der akzeptierten Limits</pre>
           </b-modal>
 
         </b-row>

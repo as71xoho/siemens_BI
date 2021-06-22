@@ -2,48 +2,47 @@ var mqtt = require('mqtt')
 var client  = mqtt.connect('mqtt://127.0.0.1:1883')
 
 
-var temp=78
-var hum=30
+var tempcount=0
+var humcount=0
 
 
 function sendDataTemperature() {
-    const temperature=temp+1
-    temp+=2
+    const temperature=(Math.random() * (84 - 80) + 80).toFixed(2);
+    const temperatureError=(Math.random() * (80 - 75) + 75).toFixed(2);
     const time=new Date().getTime()
     const msg={"timestamp": time,"temperature": parseFloat(temperature)}
-    client.publish('/temperature', JSON.stringify(msg))
+    if (tempcount<15){
+        client.publish('/temperature', JSON.stringify(msg))
+        tempcount+=1
+    }
+    else {
+        const msgError={"timestamp": time,"temperature": parseFloat(temperatureError)}
+        client.publish('/temperature', JSON.stringify(msgError))
+    }
+
 
 }
 
-function sendDataTemperatureError() {
-    const temperature=(Math.random() * (95 - 75) + 75).toFixed(2);
-    const time=new Date().getTime()
-    const msg={"timestamp": time,"temperature": parseFloat(temperature)}
-    client.publish('/temperature', JSON.stringify(msg))
 
-}
 
 function sendDataHumidity() {
-    const humidity=(Math.random() * (40 - 35) + 35).toFixed(2);
+    const humidity=(Math.random() * (52 - 49) + 49).toFixed(2);
+    const humidityError=(Math.random() * (45 - 40) + 40).toFixed(2);
     const time=new Date().getTime()
-  
     const msg={"timestamp": time, "humidity":parseFloat(humidity)}
-    client.publish('/humidity', JSON.stringify(msg))
-    console.log(msg)
-    
+    const msgError={"timestamp": time, "humidity":parseFloat(humidityError)}
+    if (humcount<15){
+        client.publish('/humidity', JSON.stringify(msg))
+        humcount+=1
+    } else {
+        client.publish('/humidity', JSON.stringify(msgErrorError))
+    }
+
+
 }
 
-function sendDataHumidityError() {
-    const humidity=(Math.random() * (52 - 43) + 43).toFixed(2);
-    const time=new Date().getTime()
 
-    const msg={"timestamp": time, "humidity":parseFloat(humidity)}
-    client.publish('/humidity', JSON.stringify(msg))
-    console.log(msg)
-    
-}
-setInterval(sendDataTemperature, 1500 );
-setInterval(sendDataHumidity, 1500 );
-setInterval(sendDataTemperatureError, 5000 );
-setInterval(sendDataHumidityError, 5000 );
+setInterval(sendDataTemperature, 5000 );
+setInterval(sendDataHumidity, 5000 );
+
 

@@ -3,11 +3,11 @@ import Vue from 'vue';
 const state = Vue.observable({
   OptionsTemp: {
     MinValue: 80,
-    MaxValue: 95,
+    MaxValue: 84,
   },
   OptionsHumidity: {
-    MinValue: 35,
-    MaxValue: 40,
+    MinValue: 49,
+    MaxValue: 52,
   },
   NextMaintenanceDummyMachine: 365,
   ProductionStopped: false,
