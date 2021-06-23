@@ -82,7 +82,8 @@
             </b-table>
           </b-col>
           <b-modal :id="'my-modal'" :title="'Error Description'" ok-only >
-            <pre>Der Sensor meldete Werte außerhalb der akzeptierten Limits</pre>
+            <pre>Der Sensor meldete Werte außerhalb der akzeptierten Limits.
+              Versuchen Sie eine re-initialisierung</pre>
           </b-modal>
 
         </b-row>
@@ -148,6 +149,7 @@ export default {
       NextMaintenance: store.NextMaintenanceDummyMachine,
       TempChartOptions: {
         series: [{
+          name: 'Temperatur',
           data: [], // sample data
         }],
         title: '',
@@ -169,6 +171,7 @@ export default {
       },
       HumidityChartOptions: {
         series: [{
+          name: 'Luftfeuchtigkeit',
           data: [], // sample data
         }],
         title: '',
@@ -283,9 +286,9 @@ export default {
       itemsEventsFields: [
 
         // A regular column
-        'Timestamp',
+        { key: 'Timestamp', label: 'Zeitstempel' },
         // A regular column
-        'Error ID',
+        { key: 'Error ID', label: 'Fehler ID' },
         { key: 'error', label: 'Error Code' },
         'Sensor',
         'Event',
@@ -395,7 +398,7 @@ export default {
         if (rawData.humidity > store.OptionsHumidity.MaxValue || rawData.humidity < store.OptionsHumidity.MinValue) {
           this.itemsHumidity[0]['ALARM ANZAHL'] += 1;
           this.itemsGeneral[0]['Nächste Wartung (Tage)'] -= 1;
-          this.generateEvent('Humidity', rawData.humidity > store.OptionsHumidity.MaxValue ? 'Über Limit' : 'Unter Limit');
+          this.generateEvent('Luftfeuchtigkeit', rawData.humidity > store.OptionsHumidity.MaxValue ? 'Über Limit' : 'Unter Limit');
         }
         // eslint-disable-next-line max-len
         this.itemsHumidity[0].AVG = this.calcStatistics(this.HumidityChartOptions.series[0].data);

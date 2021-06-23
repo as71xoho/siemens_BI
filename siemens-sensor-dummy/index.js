@@ -35,14 +35,14 @@ function sendDataHumidity() {
         client.publish('/humidity', JSON.stringify(msg))
         humcount+=1
     } else {
-        client.publish('/humidity', JSON.stringify(msgErrorError))
+        client.publish('/humidity', JSON.stringify(msgError))
     }
 
 
 }
 
 
-setInterval(sendDataTemperature, 5000 );
-setInterval(sendDataHumidity, 5000 );
+setInterval(sendDataTemperature, 3000 );
+setInterval(sendDataHumidity, 3000 );
 
 

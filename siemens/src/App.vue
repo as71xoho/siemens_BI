@@ -2,7 +2,8 @@
   <div id="app">
     <div>
       <b-navbar toggleable="lg" type="dark">
-        <b-navbar-brand href="#" v-b-toggle.sidebar-1>CLOUDY</b-navbar-brand>
+        <b-navbar-brand href="#" v-b-toggle.sidebar-1>
+          CLOUDY</b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -19,7 +20,7 @@
             <b-nav-item-dropdown right>
               <!-- Using 'button-content' slot -->
               <template #button-content>
-                <em>User</em>
+                <em>A.Schadler</em>
               </template>
               <b-dropdown-item href="#">Profile</b-dropdown-item>
               <b-dropdown-item href="#">Sign Out</b-dropdown-item>
@@ -66,25 +67,25 @@ export default {
       ],
       itemsGeneral: [
         {
-          Name: 'Siemens ET200', 'Nächste Wartung (Tage)': 365, ID: '#20',
+          Name: 'Siemens RM', 'Nächste Wartung (Tage)': 365, ID: '#20',
         },
         {
-          Name: 'Siemens ET300', 'Nächste Wartung (Tage)': 323, ID: '#02',
+          Name: 'Siemens PET', 'Nächste Wartung (Tage)': 323, ID: '#02',
         },
         {
-          Name: 'Siemens ET200', 'Nächste Wartung (Tage)': 36, ID: '#10',
+          Name: 'Siemens PET', 'Nächste Wartung (Tage)': 36, ID: '#10',
         },
         {
-          Name: 'Siemens ET300', 'Nächste Wartung (Tage)': 356, ID: '#04',
+          Name: 'Siemens RM', 'Nächste Wartung (Tage)': 356, ID: '#04',
         },
         {
-          Name: 'Siemens ET300', 'Nächste Wartung (Tage)': 148, ID: '#25',
+          Name: 'Siemens RM', 'Nächste Wartung (Tage)': 148, ID: '#25',
         },
         {
-          Name: 'Siemens ET200', 'Nächste Wartung (Tage)': 134, ID: '#12',
+          Name: 'Siemens RM', 'Nächste Wartung (Tage)': 134, ID: '#12',
         },
         {
-          Name: 'Siemens ET200', 'Nächste Wartung (Tage)': 294, ID: '#40',
+          Name: 'Siemens PET', 'Nächste Wartung (Tage)': 294, ID: '#40',
         },
 
       ],

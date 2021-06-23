@@ -9,7 +9,7 @@ const state = Vue.observable({
     MinValue: 49,
     MaxValue: 52,
   },
-  NextMaintenanceDummyMachine: 365,
+  NextMaintenanceDummyMachine: 6,
   ProductionStopped: false,
   ReportedProblems: 0,
   ReportedProblemsVersicherung: 0,

@@ -11,12 +11,12 @@
               <b-row>
                 <b-col md="6">
                   <b-card title="Gemeldete Pobleme">
-                    <b-card-text>5</b-card-text>
+                    <b-card-text>2</b-card-text>
                   </b-card>
                 </b-col>
                 <b-col md="6">
                   <b-card title="Gelöste Probleme">
-                    <b-card-text>2</b-card-text>
+                    <b-card-text>1</b-card-text>
                   </b-card>
                 </b-col>
               </b-row>
@@ -66,6 +66,19 @@
                 <template #cell(Aktionen)="data">
                   <b-button v-if="data.item.Status==='offen'">Kontakt aufnehmen</b-button>
                   <b-button v-else >Report anzeigen</b-button>
+                </template>
+                <template #cell(Details)="row">
+
+                  <b-form-checkbox v-model="row.detailsShowing" @change="row.toggleDetails">
+                    Details
+                  </b-form-checkbox>
+                </template>
+                <template #row-details="">
+                  <b-card>
+                    <b-table :fields="itemsEventsFields"  :items="itemsEvents">
+                    </b-table>
+
+                  </b-card>
                 </template>
               </b-table>
 
@@ -208,7 +221,7 @@ export default {
           type: 'column',
         },
         title: {
-          text: 'Auswertungen aller Maschinen',
+          text: 'Auswertungen aller Maschinen (letztes Jahr)',
         },
         xAxis: {
           categories: [
@@ -321,7 +334,7 @@ export default {
         // A regular column
         'Datum',
         'Status',
-        'Aktionen',
+        'Details',
 
       ],
       itemsProblems: [
@@ -467,6 +480,16 @@ export default {
         },
         ],
       },
+      itemsEventsFields: [
+
+        { key: 'Timestamp', label: 'Zeitstempel' },
+        // A regular column
+        { key: 'Error ID', label: 'Fehler ID' },
+        { key: 'error', label: 'Error Code' },
+        'Sensor',
+        'Event',
+
+      ],
 
     };
   },
@@ -476,6 +499,9 @@ export default {
     },
     events() {
       return store.itemsEventsVerischerung;
+    },
+    itemsEvents() {
+      return store.itemsEvents;
     },
   },
 };
